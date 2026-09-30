@@ -1,0 +1,484 @@
+@import "tailwindcss";
+
+/* =============================================
+   DESIGN TOKENS — Ubaikab Shaikh Portfolio
+   Inspired by haoqi.design visual language
+   ============================================= */
+
+@layer theme {
+  :root {
+    /* Typography */
+    --font-display: "Space Grotesk", sans-serif;
+    --font-mono: "Space Mono", monospace;
+
+    /* Easing curves */
+    --ease-66: cubic-bezier(0.66, 0, 0.01, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+    /* Accent */
+    --accent: #9edb00;
+    --accent-rgb: 158, 219, 0;
+
+    /* Light mode — high-contrast crisp swiss editorial */
+    --label-1: #0a0c0c;
+    --label-2: #3e4242;
+    --label-3: #6e7474;
+    --label-4: #a8aeae;
+
+    --line: rgba(0, 0, 0, 0.09);
+    --background-1: #f7f7f4;
+    --background-elevated: #ffffff;
+    --selection-bg: #9edb00;
+
+    /* Spacing — responsive padding system */
+    --page-px: clamp(1.25rem, 5vw, 5rem);
+    --page-py-sm: clamp(3rem, 6vw, 5rem);
+    --page-py-lg: clamp(4rem, 8vw, 8rem);
+
+    /* Max-width container */
+    --max-w: 1600px;
+
+    /* Z-index scale */
+    --z-bg: -10;
+    --z-base: 0;
+    --z-card: 10;
+    --z-nav: 50;
+    --z-menu: 60;
+    --z-loader: 100;
+    --z-cursor: 9999;
+  }
+
+  .dark {
+    --accent: #c0fe04;
+    --accent-rgb: 192, 254, 4;
+
+    --label-1: #f4f6f6;
+    --label-2: #a4abab;
+    --label-3: #687070;
+    --label-4: #343a3a;
+
+    --line: rgba(255, 255, 255, 0.08);
+    --background-1: #0c0e0e;
+    --background-elevated: #141717;
+    --selection-bg: #c0fe04;
+  }
+}
+
+/* =============================================
+   BASE RESET
+   ============================================= */
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    height: 100%;
+    overflow: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  html::-webkit-scrollbar { display: none; }
+
+  body {
+    height: 100%;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--background-1);
+    color: var(--label-1);
+    font-family: var(--font-display);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Prevent horizontal overflow globally */
+    max-width: 100%;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: #000;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img, svg, canvas, video {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    background: none;
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* Focus visible — meaningful ring */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Skip link */
+  .skip-link {
+    position: fixed;
+    top: -100%;
+    left: 1rem;
+    z-index: calc(var(--z-cursor) + 1);
+    background: var(--accent);
+    color: #000;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: top 0.2s;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+/* =============================================
+   SCROLL CONTAINER
+   ============================================= */
+
+@layer utilities {
+  .scroll-container {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-container::-webkit-scrollbar { display: none; }
+
+  /* =============================================
+     PAGE SECTION — shared padding wrapper
+     ============================================= */
+
+  .page-section {
+    width: 100%;
+    padding-inline: var(--page-px);
+    padding-block: var(--page-py-lg);
+    max-width: var(--max-w);
+    margin-inline: auto;
+  }
+
+  /* =============================================
+     12-COLUMN GRID SYSTEM
+     ============================================= */
+
+  .grid-12 {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* Responsive grid spans */
+  .col-full    { grid-column: 1 / -1; }
+  .col-half    { grid-column: span 6; }
+  .col-third   { grid-column: span 4; }
+  .col-quarter { grid-column: span 3; }
+
+  /* =============================================
+     TYPOGRAPHY SCALE
+     ============================================= */
+
+  .text-hero {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 10vw, 10rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .text-section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .text-manifesto {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 8.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .text-footer-cta {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7.5vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .text-body-lg {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.65;
+  }
+
+  .text-label {
+    font-family: var(--font-mono);
+    font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--label-3);
+  }
+
+  /* =============================================
+     DOTTED HOVER BORDER (haoqi signature)
+     ============================================= */
+
+  .hover-dotted {
+    position: relative;
+  }
+
+  .hover-dotted::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 2px dotted transparent;
+    pointer-events: none;
+    transition: border-color 0.2s ease;
+    border-radius: 2px;
+  }
+
+  .hover-dotted:hover::before,
+  .hover-dotted:focus-visible::before {
+    border-color: var(--label-1);
+  }
+
+  /* =============================================
+     REVEAL ANIMATION CLASSES
+     Used by GSAP + IntersectionObserver
+     ============================================= */
+
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+  }
+
+  .reveal-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .reveal-line > .inner {
+    display: block;
+    transform: translateY(100%);
+    transition: transform 0.9s var(--ease-out-expo);
+  }
+
+  .reveal-line.is-visible > .inner {
+    transform: translateY(0);
+  }
+
+  /* =============================================
+     SECTION DIVIDER
+     ============================================= */
+
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* =============================================
+     MARQUEE — for skills
+     ============================================= */
+
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    will-change: transform;
+    white-space: nowrap;
+  }
+
+  /* =============================================
+     SCROLLBAR HIDE UTILITY
+     ============================================= */
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* =============================================
+     MOBILE MENU STATE
+     ============================================= */
+
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
+/* =============================================
+   ANIMATIONS
+   ============================================= */
+
+/* SVG signature draw */
+.svg-sign__path {
+  opacity: 0;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.svg-sign.is-drawing .svg-sign__path {
+  animation:
+    svg-sign-show 0s linear var(--path-delay, 0s) forwards,
+    svg-sign-draw var(--path-dur, 1s) cubic-bezier(0.65, 0, 0.35, 1) var(--path-delay, 0s) forwards;
+}
+
+@keyframes svg-sign-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes svg-sign-show {
+  to { opacity: 1; }
+}
+
+/* Pulse — for "available" dot */
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(192,254,4,0.5); }
+  50% { transform: scale(1.1); opacity: 0.85; box-shadow: 0 0 0 4px rgba(192,254,4,0); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* Cursor pulse (for nav available dot) */
+@keyframes cursor-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+/* Fade-in utility */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fade-up 0.8s var(--ease-out-expo) forwards;
+}
+
+/* Spin slow */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.spin-slow { animation: spin-slow 12s linear infinite; }
+
+/* Marquee scroll */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-scroll {
+  animation: marquee-scroll 25s linear infinite;
+}
+
+.marquee-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* =============================================
+   RESPONSIVE — MEDIA QUERIES
+   ============================================= */
+
+/* Mobile first — these override at larger breakpoints */
+
+/* Tablet — 768px+ */
+@media (min-width: 768px) {
+  :root {
+    --page-px: clamp(2rem, 5vw, 4rem);
+  }
+}
+
+/* Desktop — 1024px+ */
+@media (min-width: 1024px) {
+  :root {
+    --page-px: clamp(2.5rem, 4.5vw, 5rem);
+  }
+}
+
+/* Wide — 1440px+ */
+@media (min-width: 1440px) {
+  :root {
+    --page-px: clamp(3rem, 5vw, 5.5rem);
+  }
+}
+
+/* =============================================
+   REDUCED MOTION
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .svg-sign.is-drawing .svg-sign__path {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  .marquee-scroll {
+    animation: none;
+  }
+
+  .reveal-up,
+  .reveal-line > .inner {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
