@@ -64,7 +64,7 @@ export const EXPERIENCES: Experience[] = [
     number: "01",
     company: "ModelSuite AI",
     role: "Full Stack Developer (Internship)",
-    period: "JULY 2025 — SEP 2025",
+    period: "JULY 2026 — SEP 2026",
     location: "Remote / Mumbai, India",
     responsibilities: [
       "Architecting end-to-end full-stack web features with modern JavaScript frameworks and scalable backend APIs.",
